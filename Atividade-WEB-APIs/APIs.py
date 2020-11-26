@@ -25,7 +25,7 @@ def post(url):
 
 def IP():
     url = "http://ip-api.com/json/19.48.0.1"
-    response = post(url)
+    response = post(url) ## usando método POST para fazer a requisição
     print(response.status_code)
 
     location = json.loads(response.content)
@@ -53,7 +53,7 @@ def IP():
 
 def Makeup():
     url = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline"
-    response = get(url)
+    response = get(url) ## usando método GET para fazer a requisição
     print(response.status_code)
 
     products = json.loads(response.content)
@@ -73,7 +73,7 @@ def Makeup():
 
 def Data():
     url = "https://api.dailymotion.com/user/x1fz4ii/videos"
-    response = get(url)
+    response = get(url) ## usando método GET para fazer a requisição
     print(response.status_code)
 
     pages = json.loads(response.content)
