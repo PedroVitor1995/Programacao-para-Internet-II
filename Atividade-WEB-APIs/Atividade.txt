@@ -1,0 +1,6 @@
+1) Pesquise pelo menos 3 APIs não apresentadas nos slides que você julgar interessantes. Além disso, coloque:
+•	Uma breve descrição;
+•	Uma pequena demonstração do uso;
+
+2) Utilizando a biblioteca requests, exemplifique as APIs com diferentes verbos HTTPs. Pelo menos uma das 
+APIs deve ser demonstrada usando um verbo HTTP diferente do GET
