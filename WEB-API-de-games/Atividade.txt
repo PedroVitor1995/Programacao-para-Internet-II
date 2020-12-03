@@ -1,0 +1,5 @@
+Com base na WEB API apresentada, faça as seguintes validações na API proposta:
+a.	[POST, PUT]: Jogos não podem ter nomes repetidos;
+b.	[DELETE]: Jogos que já foram lançados não podem ser excluídos.
+
+Nota verifique se os status codes que vimos na aula são suficientes e retorne também uma informação descritiva ao retornar um erro de validação.
