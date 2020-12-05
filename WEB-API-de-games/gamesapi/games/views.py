@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Game
 from .serializers import GameSerializer
+from datetime import datetime,timezone
 
 # Create your views here.
 
@@ -48,7 +49,7 @@ def game_detail(request, pk):
 		return Response(games_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 	elif request.method == 'DELETE':
-		if game.played == True:
+		if game.release_date.now() <= datetime.now():
 			return Response("O jogo não pode removido, pois já foi lançado",status=status.HTTP_400_BAD_REQUEST)
 		game.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
