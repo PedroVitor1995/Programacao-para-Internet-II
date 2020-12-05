@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Game
 from .serializers import GameSerializer
-from datetime import datetime,timezone
+from datetime import datetime
 
 # Create your views here.
 
