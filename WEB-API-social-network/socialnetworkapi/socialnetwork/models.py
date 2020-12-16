@@ -2,17 +2,27 @@ from django.db import models
 
 # Create your models here.
 
-class Profile(models.Model):
-    name = models.CharField(max_length=300, blank=True, default='')
-    email = models.EmailField(max_length=150, blank=False, null=False)
+class Address(models.Model):
+	street = models.CharField(max_length=300)
+	suite = models.CharField(max_length=300)
+	city = models.CharField(max_length=300)
+	zipcode = models.CharField(max_length=300)
 
+class Profile(models.Model):
+	name = models.CharField(max_length=500)
+	email = models.EmailField(max_length=500)
+	address = models.OneToOneField(Address, related_name='address', on_delete=models.CASCADE)
+
+	class Meta:
+		ordering = ('name',)
+		
 class Post(models.Model):
-    userId = models.ForeignKey(Profile, related_name='profile_post', on_delete=models.CASCADE)
-    title = models.TextField()
-    body = models.TextField()
+	title = models.TextField()
+	body = models.TextField()
+	userId = models.ForeignKey(Profile, related_name='posts', on_delete=models.CASCADE)
 
 class Comment(models.Model):
-    postId = models.ForeignKey(Post,related_name='post_comment', on_delete=models.CASCADE)
-    name = models.CharField(max_length=300, blank=True, default='')
-    email = models.EmailField(max_length=150, blank=False, null=False)
-    body = models.TextField()
+	name = models.TextField()
+	email = models.EmailField(max_length=500)
+	body = models.TextField()
+	postId = models.ForeignKey(Post,related_name='comments', on_delete=models.CASCADE)
