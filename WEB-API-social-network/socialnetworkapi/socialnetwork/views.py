@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import *
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -74,9 +75,72 @@ class PostDetailCommentList(generics.RetrieveAPIView):
 	name = 'post-detail-comment-list'
 
 # http://servidor/posts/id/comments
+class PostCommentList(APIView):
+
+	name = 'post-comment-list'
+
+	def get_post(self, pk): 
+		try:
+			return Post.objects.get(pk=pk)
+		except Post.DoesNotExist:
+			raise Http404
+
+	def get(self, request, pk, format=None):
+		post = self.get_post(pk)
+		comment_serializer = CommentSerializer(post.comments, many=True)
+		return Response(comment_serializer.data)
+
+	def post(self, request, pk, format=None):
+		comment = request.data
+		comment['postId'] = self.get_post(pk).id
+		comment_serializer = CommentSerializer(data=comment)
+		
+		if comment_serializer.is_valid():
+			comment_serializer.save()
+			return Response(comment_serializer.data, status=status.HTTP_201_CREATED)
+		
+		return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # http://servidor/posts/id/comments/id
+class PostCommentDetail(APIView):
+	
+	name = 'post-comment-detail'
 
+	def get_post(self, pk): 
+		try:
+			return Post.objects.get(pk=pk)
+		except Post.DoesNotExist:
+			raise Http404
+
+	def get_comment(self, post_pk, comment_pk):
+		try:
+			post = self.get_post(post_pk)
+			return post.comments.get(pk=comment_pk)
+		except Comment.DoesNotExist:
+			raise Http404
+
+	def get(self, request, post_pk, comment_pk, format=None):
+		comment = self.get_comment(post_pk,comment_pk)
+		comment_serializer = CommentSerializer(comment)
+		return Response(comment_serializer.data)
+
+	def put(self, request, post_pk, comment_pk, format=None):
+		comment = self.get_comment(post_pk,comment_pk)
+		comment_data = request.data
+		comment_data['postId'] = self.get_comment(post_pk,comment_pk).postId.id
+		comment_serializer = CommentSerializer(comment, data=comment_data)
+		
+		if comment_serializer.is_valid():
+			comment_serializer.save()
+			return Response(comment_serializer.data)
+		
+		return Response(comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request, post_pk, comment_pk, format=None):
+		comment = self.get_comment(post_pk,comment_pk)
+		comment.delete()
+		return Response(status=status.HTTP_200_OK)
 
 class ProfilePostComment(APIView):
 
@@ -107,10 +171,12 @@ class EndpointList(generics.GenericAPIView):
 
 	name = 'api-root'
 
-	def get(self, request,*args, **kwargs):
+	def get(self, request,*args, **kwargs):	
+		root_url = 'http://127.0.0.1:8000/'
 		return Response({
 			'profiles': reverse(ProfileList.name, request=request),
 			'profiles-posts': reverse(ProfileListPostList.name, request=request),
 			'posts-comments': reverse(PostListCommentList.name, request=request),
-			'profiles-posts-comments': reverse(ProfilePostComment.name, request=request)
-			})
+			'post-detail-comments' : root_url + 'posts/<int:pk>/comments',
+			'profiles-posts-comments': reverse(ProfilePostComment.name, request=request)			
+		})

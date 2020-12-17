@@ -40,7 +40,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 	postId = serializers.SlugRelatedField(queryset=Post.objects.all(),slug_field='id')
 	class Meta:
 		model = Comment
-		fields = ['name', 'email', 'body', 'postId']
+		fields = ['id', 'name', 'email', 'body', 'postId']
 
 class PostProfileSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -62,5 +62,4 @@ class PostCommentSerializer(serializers.HyperlinkedModelSerializer):
 	comments = CommentPostSerializer(many=True, read_only=True)
 	class Meta:
 		model = Post
-		fields = ['url', 'title', 'body','comments']
-
+		fields = ['title', 'body','comments']
