@@ -172,11 +172,11 @@ class EndpointList(generics.GenericAPIView):
 	name = 'api-root'
 
 	def get(self, request,*args, **kwargs):	
-		root_url = 'http://127.0.0.1:8000/'
+		url_base = 'http://127.0.0.1:8000/'
 		return Response({
 			'profiles': reverse(ProfileList.name, request=request),
 			'profiles-posts': reverse(ProfileListPostList.name, request=request),
 			'posts-comments': reverse(PostListCommentList.name, request=request),
-			'post-detail-comments' : root_url + 'posts/<int:pk>/comments',
+			'post-detail-comments' : url_base + 'posts/<int:pk>/comments',
 			'profiles-posts-comments': reverse(ProfilePostComment.name, request=request)			
 		})
